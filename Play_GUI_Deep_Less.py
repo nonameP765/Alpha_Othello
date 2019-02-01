@@ -291,7 +291,6 @@ class App(QWidget):
 
                 # 원턴킬 이면 이렇게 함
                 if onekill:
-                    print("원턴킬! 과부하!")
                     canMovF = list()
                     for z in range(len(canMovA)):
                         canMovF.append(canMove[z])
@@ -357,7 +356,6 @@ class App(QWidget):
 
                     # 원턴킬 이면 이렇게 함
                     if onekill:
-                        print("원턴킬?")
                         tmp.append([0, 1])
                     else:
                         Wi = 0
@@ -367,7 +365,6 @@ class App(QWidget):
                             Wi += j[0]
                             Ni += j[1]
                         tmp.append([Wi, Ni])
-            print(tmp, canMovF)
             return tmp, canMovF
 
     def aiMove(self):

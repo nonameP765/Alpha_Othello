@@ -463,7 +463,6 @@ class App(QWidget):
                         for i in range(0, len(sameNum)):
                             if insameBig == mcts[sameNum[i]][1]:
                                 insameBigM.append(sameNum[i])
-                        print(insameBigM)
 
                         sameRandom = random.randrange(0, len(insameBigM))
 

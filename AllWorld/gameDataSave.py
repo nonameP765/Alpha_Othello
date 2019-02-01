@@ -116,12 +116,10 @@ def mainplay(p0):
     with open(p0 + '.json') as f:
         data = json.load(f)
     data = list(data)
-    print(data)
     x_save = list()
     y_save = list()
 
     for i in data:
-        print(i)
         x, y = othello.createData(i)
         for j in range(len(x)):
             x1 = create_dump()
@@ -179,45 +177,29 @@ def mainplay(p0):
         for j in range(0, len(y_save[i])):
             y_save[i][j] = y_save[i][j] / maxy
 
-    print(len(x_save))
-    print(len(x_save[0]))
-    print(len(x_save[0][0]))
-    print(len(x_save[0][0][0]))
-    print(len(y_save))
-    print(y_save[0])
     for i in x_save[0]:
         tmp = ""
         for j in i:
             tmp += str(j)
-        print(tmp)
-    print()
-    print(y_save[0][46])
     for i in range(8):
         t = ""
         for j in range(8):
             t += str(y_save[0][i * 8 + j]) + " "
-        print(t)
 
-    othello.printBoard(x_save[8][0], othello.canMove(x_save[8][0], 1))
 
     for z in range(10, 20):
-        print("x", z)
         for i in x_save[z]:
             for c in i:
                 tmp = ""
                 for j in c:
                     tmp += str(j) + " "
-                print(tmp)
-        print("y", z)
         for i in range(8):
             t = ""
             for j in range(8):
                 t += str(y_save[z][i * 8 + j]) + " "
-            print(t)
 
     import numpy as np
 
-    print(np.shape(x_save))
     with open(p0 + '_x.json', 'w') as outfile:
         json.dump(x_save, outfile)
     with open(p0 + '_y.json', 'w') as outfile:
@@ -228,12 +210,10 @@ def mainValue(p0):
     with open(p0 + '.json') as f:
         data = json.load(f)
     data = list(data)
-    print(data)
     x_save = list()
     y_save = list()
 
     for i in data:
-        print(i)
         winner = othello.winnerIs(i)
         x, y = othello.createData(i)
         for j in range(len(x)):
@@ -298,35 +278,21 @@ def mainValue(p0):
     for i in range(0, len(y_save)):
 
         y_save[i] = [y_save[i][0] / (y_save[i][0] + y_save[i][1]), y_save[i][1] / (y_save[i][0] + y_save[i][1])]
-    print(len(x_save))
-    print(len(x_save[0]))
-    print(len(x_save[0][0]))
-    print(len(x_save[0][0][0]))
-    print(len(y_save))
-    print(y_save[0])
     for i in x_save[0]:
         tmp = ""
         for j in i:
             tmp += str(j)
-        print(tmp)
-    print()
 
-    othello.printBoard(x_save[8][0], othello.canMove(x_save[8][0], 1))
 
     for z in range(0, 20):
-        print("x", z)
         for i in x_save[z]:
             for c in i:
                 tmp = ""
                 for j in c:
                     tmp += str(j) + " "
-                print(tmp)
-        print("y", z)
-        print(y_save[z])
 
     import numpy as np
 
-    print(np.shape(x_save))
     with open(p0 + '_ValueX.json', 'w') as outfile:
         json.dump(x_save, outfile)
     with open(p0 + '_ValueY.json', 'w') as outfile:
