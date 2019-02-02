@@ -2,21 +2,21 @@
 import copy
 
 
-def winnerIs(str_in):
+def winnerIs(input_str):
     _board_, _count = gameInit()
 
     _now_player = 1
     _gibos = []
-    for i in range(len(str_in)):
+    for i in range(len(input_str)):
         if i % 2 == 0:
-            _gibos.append(giboParse(str_in[i: i + 2]))
+            _gibos.append(giboParse(input_str[i: i + 2]))
 
     while True:
-        canDo = False
+        can_do = False
         for j in canMove(_board_, _now_player):
             if j == _gibos[_count]:
-                canDo = True
-        if canDo:
+                can_do = True
+        if can_do:
             move(_gibos[_count], _board_, _now_player)
             _count += 1
 
@@ -66,7 +66,7 @@ def currentBoard(winner, boardTmp, _count):
     return tmp
 
 
-def createData(str_in):
+def createData(input_str):
     rtnTmp = list()
     rtn2Tmp = list()
     _board_, _count = gameInit()
@@ -75,15 +75,15 @@ def createData(str_in):
 
     _now_player = 1
     _gibos = list()
-    for i in range(len(str_in)):
+    for i in range(len(input_str)):
         if i % 2 == 0:
-            _gibos.append(giboParse(str_in[i: i + 2]))
+            _gibos.append(giboParse(input_str[i: i + 2]))
     while True:
-        canDo = False
+        can_do = False
         for j in canMove(_board_, _now_player):
             if j == _gibos[_count]:
-                canDo = True
-        if canDo:
+                can_do = True
+        if can_do:
             boardTmp = copy.deepcopy(_board_)
 
             move(_gibos[_count], _board_, _now_player)
@@ -99,24 +99,24 @@ def createData(str_in):
     return rtnTmp, rtn2Tmp
 
 
-def createValueData(str_in):
+def createValueData(input_str):
     rtnTmp = list()
     rtn2Tmp = list()
     _board_, _count = gameInit()
     _board_ = copy.deepcopy(_board_)
     _count = copy.deepcopy(_count)
-    winner = winnerIs(str_in)
+    winner = winnerIs(input_str)
     _now_player = 1
     _gibos = list()
-    for i in range(len(str_in)):
+    for i in range(len(input_str)):
         if i % 2 == 0:
-            _gibos.append(giboParse(str_in[i: i + 2]))
+            _gibos.append(giboParse(input_str[i: i + 2]))
     while True:
-        canDo = False
+        can_do = False
         for j in canMove(_board_, _now_player):
             if j == _gibos[_count]:
-                canDo = True
-        if canDo:
+                can_do = True
+        if can_do:
             boardTmp = copy.deepcopy(_board_)
 
             move(_gibos[_count], _board_, _now_player)
@@ -231,7 +231,9 @@ def move(position, board, color):
     return cnt
 
 
-def printBoard(board, can=[]):
+def printBoard(board, can=None):
+    if can is None:
+        can = list()
     tmp = copy.deepcopy(board)
     for i in can:
         tmp[i[1]][i[0]] = 3
