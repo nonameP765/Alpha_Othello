@@ -31,7 +31,7 @@ if os.path.isfile(modelPath):
     modelValue = load_model(valueModelPath)
 
 isGameing = False
-disboard, cnt = othello.gameInit()
+disboard, cnt = othello.initializeGame()
 nowply = 0
 ply = 1
 playerCanMove = False
@@ -124,7 +124,7 @@ class App(QWidget):
     @pyqtSlot()
     def startClick(self):
         global disboard, cnt, nowply, isGameing
-        disboard, cnt = othello.gameInit()
+        disboard, cnt = othello.initializeGame()
         nowply = 1
         self.resetBoard(disboard, nowply)
         isGameing = False
@@ -155,7 +155,7 @@ class App(QWidget):
         else:
             self.nowTurn.setText(" 인공지능 생각중...")
         board = c.deepcopy(board)
-        can = othello.canMove(board, now)
+        can = othello.isEnableToMove(board, now)
         for i in can:
             board[i[1]][i[0]] = 3
 
@@ -216,7 +216,7 @@ class App(QWidget):
         # 정책망 대입으로 값 도출
         aiResult = model.predict(np.array([tmp1]))
         # 움직일 수 있는 곳 저장
-        canMove = othello.canMove(nowBoard, color)
+        canMove = othello.isEnableToMove(nowBoard, color)
 
         # 움직일 수 있는 곳이 없다, 상대편으로 넘긴다.
         if len(canMove) == 0:
@@ -271,12 +271,12 @@ class App(QWidget):
 
                 # 원턴킬이 나면 무조건 0,1 반환시키게 검사
                 onekill = False
-                nextCanMove = othello.canMove(downBoard, -1 * color)
+                nextCanMove = othello.isEnableToMove(downBoard, -1 * color)
                 for y in nextCanMove:
                     dnextBoard = c.deepcopy(downBoard)
                     othello.move(y, dnextBoard, -1 * color)
-                    if len(othello.canMove(dnextBoard, -1 * color)) == 0 and len(
-                            othello.canMove(dnextBoard, color)) == 0:
+                    if len(othello.isEnableToMove(dnextBoard, -1 * color)) == 0 and len(
+                            othello.isEnableToMove(dnextBoard, color)) == 0:
                         my = 0
                         en = 0
                         for j in downBoard:
@@ -317,7 +317,7 @@ class App(QWidget):
                     aiInput.append(aitmp)
                     aiResultValue = modelValue.predict(np.array([aiInput]))
                     tmp.append([aiResultValue[0][0], 1])
-                elif len(othello.canMove(downBoard, -1 * color)) == 0 and len(othello.canMove(downBoard, color)) == 0:
+                elif len(othello.isEnableToMove(downBoard, -1 * color)) == 0 and len(othello.isEnableToMove(downBoard, color)) == 0:
                     my = 0
                     en = 0
                     for j in downBoard:
@@ -335,12 +335,12 @@ class App(QWidget):
                 else:
                     # 원턴킬이 나면 무조건 0,1 반환시키게 검사
                     onekill = False
-                    nextCanMove = othello.canMove(downBoard, -1 * color)
+                    nextCanMove = othello.isEnableToMove(downBoard, -1 * color)
                     for y in nextCanMove:
                         dnextBoard = c.deepcopy(downBoard)
                         othello.move(y, dnextBoard, -1 * color)
-                        if len(othello.canMove(dnextBoard, -1 * color)) == 0 and len(
-                                othello.canMove(dnextBoard, color)) == 0:
+                        if len(othello.isEnableToMove(dnextBoard, -1 * color)) == 0 and len(
+                                othello.isEnableToMove(dnextBoard, color)) == 0:
                             my = 0
                             en = 0
                             for j in downBoard:
@@ -369,7 +369,7 @@ class App(QWidget):
 
     def aiMove(self):
         global cnt, disboard, nowply, ply, isGameing
-        if len(othello.canMove(disboard, 1)) == 0 and len(othello.canMove(disboard, -1)) == 0:
+        if len(othello.isEnableToMove(disboard, 1)) == 0 and len(othello.isEnableToMove(disboard, -1)) == 0:
             blacknum = 0
             whitlenum = 0
             for i in range(8):
@@ -418,7 +418,7 @@ class App(QWidget):
             #
             #     self.playerMovePre()
             else:
-                if len(othello.canMove(disboard, nowply)) == 0:
+                if len(othello.isEnableToMove(disboard, nowply)) == 0:
                     self.showMessageBox()
                     nowply = -1 * nowply
                     self.resetBoard(disboard, nowply)
@@ -458,7 +458,7 @@ class App(QWidget):
 
     def playerMovePre(self):
         global nowply, isGameing, playerCanMove, disboard
-        if len(othello.canMove(disboard, 1)) == 0 and len(othello.canMove(disboard, -1)) == 0:
+        if len(othello.isEnableToMove(disboard, 1)) == 0 and len(othello.isEnableToMove(disboard, -1)) == 0:
             blacknum = 0
             whitlenum = 0
             for i in range(8):
@@ -484,7 +484,7 @@ class App(QWidget):
                     self.winner.setText(" 무승부 입니다.")
             isGameing = False
         else:
-            if len(othello.canMove(disboard, ply)) == 0:
+            if len(othello.isEnableToMove(disboard, ply)) == 0:
                 self.showMessageBox()
                 nowply = -1 * nowply
 
@@ -495,7 +495,7 @@ class App(QWidget):
     def playerMove(self, plc):
         global cnt, nowply
         can = False
-        for i in othello.canMove(disboard, ply):
+        for i in othello.isEnableToMove(disboard, ply):
             if plc == i:
                 can = True
                 break

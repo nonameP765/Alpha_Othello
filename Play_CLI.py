@@ -31,7 +31,7 @@ def searchDown(nowBoard, color, mycolor, cnt):
             elif nowBoard[i][j] == -1:
                 tmp1[1][i][j] = 1
     aiResult = model.predict(np.array([tmp1]))
-    canMove = othello.canMove(nowBoard, color)
+    canMove = othello.isEnableToMove(nowBoard, color)
     if len(canMove) == 0:
         Wi = 0
         Ni = 0
@@ -64,7 +64,7 @@ def searchDown(nowBoard, color, mycolor, cnt):
         for i in canMovF:
             downBoard = c.deepcopy(nowBoard)
             othello.move(i, downBoard, color)
-            if len(othello.canMove(downBoard, -1 * color)) == 0 and len(othello.canMove(downBoard, color)) == 0:
+            if len(othello.isEnableToMove(downBoard, -1 * color)) == 0 and len(othello.isEnableToMove(downBoard, color)) == 0:
                 my = 0
                 en = 0
                 for j in downBoard:
@@ -93,7 +93,7 @@ def searchDown(nowBoard, color, mycolor, cnt):
 if __name__ == "__main__":
     # 보드 생성
 
-    disboard, cnt = othello.gameInit()
+    disboard, cnt = othello.initializeGame()
     nowply = 1
 
     ply = othello.intScan("플레이 색을 고르세요 흑1 백-1 : ")
@@ -101,15 +101,15 @@ if __name__ == "__main__":
     while True:
         if nowply == ply:
             print("==========플레이어 턴==========")
-            if len(othello.canMove(disboard, nowply)) == 0:
+            if len(othello.isEnableToMove(disboard, nowply)) == 0:
                 print("스킵")
             else:
-                othello.printBoard(disboard, othello.canMove(disboard, ply))
+                othello.printBoard(disboard, othello.isEnableToMove(disboard, ply))
 
                 while True:
-                    plc = othello.giboParse(input("기보를 입력하세요 ex)a2 : "))
+                    plc = othello.parseOriginStrForTurn(input("기보를 입력하세요 ex)a2 : "))
                     can = False
-                    for i in othello.canMove(disboard, ply):
+                    for i in othello.isEnableToMove(disboard, ply):
                         if plc == i:
                             can = True
                             break
@@ -120,17 +120,17 @@ if __name__ == "__main__":
         else:
             print("==========인공지능 턴==========")
             if cnt == 0:
-                othello.printBoard(disboard, othello.canMove(disboard, nowply))
+                othello.printBoard(disboard, othello.isEnableToMove(disboard, nowply))
                 cnt += 1
                 print("인공지능 수 :", 'f 5')
                 othello.move([5, 4], disboard, nowply)
             else:
-                if len(othello.canMove(disboard, nowply)) == 0:
+                if len(othello.isEnableToMove(disboard, nowply)) == 0:
                     print("스킵")
                 else:
                     disboardTmp = c.deepcopy(disboard)
 
-                    othello.printBoard(disboard, othello.canMove(disboard, nowply))
+                    othello.printBoard(disboard, othello.isEnableToMove(disboard, nowply))
                     if nowply == -1:
                         for a in range(8):
                             for b in range(8):
@@ -169,7 +169,7 @@ if __name__ == "__main__":
         nowply = -1 * nowply
 
         end = False
-        if len(othello.canMove(disboard, nowply)) == 0 and len(othello.canMove(disboard, -1 * nowply)) == 0:
+        if len(othello.isEnableToMove(disboard, nowply)) == 0 and len(othello.isEnableToMove(disboard, -1 * nowply)) == 0:
             end = True
         if end:
             no1 = 0

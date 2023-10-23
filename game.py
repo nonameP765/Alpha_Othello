@@ -2,18 +2,18 @@
 import copy
 
 
-def winnerIs(input_str):
-    _board_, _count = gameInit()
+def getIsWinner(input_str):
+    _board_, _count = initializeGame()
 
     _now_player = 1
     _gibos = []
     for i in range(len(input_str)):
         if i % 2 == 0:
-            _gibos.append(giboParse(input_str[i: i + 2]))
+            _gibos.append(parseOriginStrForTurn(input_str[i: i + 2]))
 
     while True:
         can_do = False
-        for j in canMove(_board_, _now_player):
+        for j in isEnableToMove(_board_, _now_player):
             if j == _gibos[_count]:
                 can_do = True
         if can_do:
@@ -42,7 +42,7 @@ def winnerIs(input_str):
         return 0
 
 
-def currentBoard(winner, boardTmp, _count):
+def getCurrentBoard(winner, boardTmp, _count):
     tmp = list()
     boardTmp = copy.deepcopy(boardTmp)
 
@@ -69,7 +69,7 @@ def currentBoard(winner, boardTmp, _count):
 def createData(input_str):
     rtnTmp = list()
     rtn2Tmp = list()
-    _board_, _count = gameInit()
+    _board_, _count = initializeGame()
     _board_ = copy.deepcopy(_board_)
     _count = copy.deepcopy(_count)
 
@@ -77,10 +77,10 @@ def createData(input_str):
     _gibos = list()
     for i in range(len(input_str)):
         if i % 2 == 0:
-            _gibos.append(giboParse(input_str[i: i + 2]))
+            _gibos.append(parseOriginStrForTurn(input_str[i: i + 2]))
     while True:
         can_do = False
-        for j in canMove(_board_, _now_player):
+        for j in isEnableToMove(_board_, _now_player):
             if j == _gibos[_count]:
                 can_do = True
         if can_do:
@@ -88,7 +88,7 @@ def createData(input_str):
 
             move(_gibos[_count], _board_, _now_player)
             _count += 1
-            brtnTmp = currentBoard(_now_player, boardTmp, _count)
+            brtnTmp = getCurrentBoard(_now_player, boardTmp, _count)
             brtnTmp.append(_now_player)
             rtnTmp.append(brtnTmp)
             rtn2Tmp.append(_gibos[_count - 1])
@@ -102,18 +102,18 @@ def createData(input_str):
 def createValueData(input_str):
     rtnTmp = list()
     rtn2Tmp = list()
-    _board_, _count = gameInit()
+    _board_, _count = initializeGame()
     _board_ = copy.deepcopy(_board_)
     _count = copy.deepcopy(_count)
-    winner = winnerIs(input_str)
+    winner = getIsWinner(input_str)
     _now_player = 1
     _gibos = list()
     for i in range(len(input_str)):
         if i % 2 == 0:
-            _gibos.append(giboParse(input_str[i: i + 2]))
+            _gibos.append(parseOriginStrForTurn(input_str[i: i + 2]))
     while True:
         can_do = False
-        for j in canMove(_board_, _now_player):
+        for j in isEnableToMove(_board_, _now_player):
             if j == _gibos[_count]:
                 can_do = True
         if can_do:
@@ -122,7 +122,7 @@ def createValueData(input_str):
             move(_gibos[_count], _board_, _now_player)
             _count += 1
             brtnTmp = list()
-            brtnTmp.append(currentBoard(_now_player, boardTmp, _count))
+            brtnTmp.append(getCurrentBoard(_now_player, boardTmp, _count))
             brtnTmp.append(_gibos[_count - 1])
             rtnTmp.append(brtnTmp)
             if winner == _now_player:
@@ -138,7 +138,7 @@ def createValueData(input_str):
     return rtnTmp, rtn2Tmp
 
 
-def gameInit():
+def initializeGame():
     return [[0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0],
@@ -146,10 +146,11 @@ def gameInit():
             [0, 0, 0, 1, -1, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0], ], 0
+            [0, 0, 0, 0, 0, 0, 0, 0],], 0
 
 
-def giboParse(str_):
+def parseOriginStrForTurn(str_):
+    str_ = str_.lower()
     if str_[0] == 'a':
         return [0, int(str_[1]) - 1]
     if str_[0] == 'b':
@@ -168,7 +169,7 @@ def giboParse(str_):
         return [7, int(str_[1]) - 1]
 
 
-def searchColor(color, board):
+def getAllPointForColor(color, board):
     tmp = []
     for i in range(8):
         for j in range(8):
@@ -177,9 +178,9 @@ def searchColor(color, board):
     return tmp
 
 
-def canMove(board, color):
+def isEnableToMove(board, color):
     tmp = []
-    myPiece = searchColor(color, board)
+    myPiece = getAllPointForColor(color, board)
     check = [[1, 1], [1, 0], [1, -1], [0, 1], [0, -1], [-1, 1], [-1, 0], [-1, -1]]
     for i in myPiece:
         for j in check:
@@ -267,31 +268,32 @@ def intScan(p0):
 
 
 if __name__ == "__main__":
-    board_, count = gameInit()
+    board_, count = initializeGame()
 
     now_player = 1
     str_in = input("입력")
     gibos = []
     for i in range(len(str_in)):
         if i % 2 == 0:
-            gibos.append(giboParse(str_in[i: i + 2]))
+            gibos.append(parseOriginStrForTurn(str_in[i: i + 2]))
 
     print(gibos)
     print(len(gibos))
     while True:
-        printBoard(board_, canMove(board_, now_player))
+        printBoard(board_, isEnableToMove(board_, now_player))
         canDo = False
-        for j in canMove(board_, now_player):
+        playerLabel = "A" if now_player == 1 else "B"
+        for j in isEnableToMove(board_, now_player):
             if j == gibos[count]:
                 canDo = True
         if canDo:
             move(gibos[count], board_, now_player)
             count += 1
-            print(count, "턴, 플레이어 :", now_player, "착수")
+            print(count, "턴, 플레이어 :", playerLabel, "착수")
         else:
-            print("플레이어 :", now_player, "턴 넘김")
+            print("플레이어 :", playerLabel, "턴 넘김")
         now_player = -1 * now_player
         if count >= len(gibos):
             break
 
-    printBoard(board_, canMove(board_, now_player))
+    printBoard(board_, isEnableToMove(board_, now_player))

@@ -198,7 +198,6 @@ def mainplay(p0):
             for j in range(8):
                 t += str(y_save[z][i * 8 + j]) + " "
 
-    import numpy as np
 
     with open(p0 + '_x.json', 'w') as outfile:
         json.dump(x_save, outfile)
@@ -214,7 +213,7 @@ def mainValue(p0):
     y_save = list()
 
     for i in data:
-        winner = othello.winnerIs(i)
+        winner = othello.getIsWinner(i)
         x, y = othello.createData(i)
         for j in range(len(x)):
             x1 = create_dump()
@@ -291,7 +290,6 @@ def mainValue(p0):
                 for j in c:
                     tmp += str(j) + " "
 
-    import numpy as np
 
     with open(p0 + '_ValueX.json', 'w') as outfile:
         json.dump(x_save, outfile)
